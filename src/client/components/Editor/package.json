@@ -1,0 +1,4 @@
+{
+  "name": "Editor",
+  "main": "./Editor.tsx"
+}

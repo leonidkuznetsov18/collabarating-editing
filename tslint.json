@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "tslint-config-airbnb",
+    "tslint-react",
+    "tslint-config-prettier",
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "import-name": false,
+    "prettier": [
+      true,
+      {
+        "singleQuote": false
+      },
+      {
+        "editorconfig": false
+      }
+    ]
+  }
+}
