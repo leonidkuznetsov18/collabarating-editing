@@ -3,9 +3,9 @@ import { hot } from "react-hot-loader/root";
 import Editor from "../../components/Editor";
 import "./Home.scss";
 
-interface Props {}
+interface Props { }
 
-interface State {}
+interface State { }
 
 class Home extends React.PureComponent<Props, State> {
   constructor(props) {
@@ -21,6 +21,7 @@ class Home extends React.PureComponent<Props, State> {
     // @ts-ignore
     return (
       <div className="Home">
+        <h1>Collaborate Text Editor</h1>
         {
           // @ts-ignore
           <Editor
