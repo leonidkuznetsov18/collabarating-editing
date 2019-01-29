@@ -35,7 +35,9 @@ class Editor extends React.PureComponent {
     // this.diffWorker.postMessage("Hello from client worker");
     // @ts-ignore
     this.calculateDiffDebounce = debounce(this.calculateDiff, 1000);
+  }
 
+  componentDidMount() {
     socket_client.on(events.server.dispatchChangeSet, ({ changeSetPack }) => {
       // apply diff between lastSyncedText and serverText
       const changeSet = Changeset.unpack(changeSetPack);
@@ -114,11 +116,6 @@ class Editor extends React.PureComponent {
 
     return caretPositionShift;
   };
-
-  private heartBeat() {
-    // todo:  should just send hash for bandwidth saving
-    // this.socket.emit('heartBeat', {from: this.userId, text: this.state.text});
-  }
 
   calculateDiff() {
     // @ts-ignore

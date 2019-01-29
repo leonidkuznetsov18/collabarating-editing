@@ -1,8 +1,0 @@
-export default {
-  CONNECT: "connect",
-  CONNECTION: "connection",
-  DISCONNECT: "disconnect",
-  CHANGE_DATA_CLIENT: "CHANGE_DATA_CLIENT",
-  CHANGE_DATA_SERVER: "CHANGE_DATA_SERVER",
-  JOIN_ROOM: "JOIN_ROOM"
-};
