@@ -1,11 +1,11 @@
 import * as React from "react";
 import { debounce } from "lodash";
-import * as DiffMatchPatch from "diff-match-patch";
 // @ts-ignore
-// import * as Changeset from "changesets";
+import diffWorkerCalc from "../../workers/diffCalc.worker";
+// @ts-ignore
+import diffWorkerBetween from "../../workers/diffBetween.worker";
 const Changeset = require("changesets").Changeset;
 import * as md5 from "blueimp-md5";
-import * as DiffWorker from "../../../workers/Diff.worker";
 import socket_client from "../../../socket/socket_client";
 import "./Editor.scss";
 import events from "../../../socket/events";
@@ -20,65 +20,63 @@ class Editor extends React.PureComponent {
     };
     // @ts-ignore
     this.textareaRef = React.createRef();
-    // @ts-ignore
-    this.dmp = new DiffMatchPatch();
-    // @ts-ignore
-    this.diffWorker = new DiffWorker();
-    // @ts-ignore
-    // this.diffWorker.addEventListener("message", ({ data }) => {
-    //   console.log("in client worker", data);
-    //   // @ts-ignore
-    //   this.diff = data;
-    // });
-    // @ts-ignore
-    // this.diffWorker.postMessage("Hello from client worker");
-    // @ts-ignore
   }
 
   componentDidMount() {
     if (socket_client) {
-      socket_client.on(events.server.dispatchChangeSet, ({ changeSetPack }) => {
-        // apply diff between lastSyncedText and serverText
-        const changeSet = Changeset.unpack(changeSetPack);
-        console.log(changeSet.inspect());
-        // @ts-ignore
-        const serverText = changeSet.apply(this.state.lastSyncedText);
-
-        // calculate diff between localText and serverText
-        // @ts-ignore
-        const diffBetweenLocalAndServer = this.dmp.diff_main(
+      socket_client.on(
+        events.server.dispatchChangeSet,
+        async ({ changeSetPack }) => {
+          // apply diff between lastSyncedText and serverText
+          const changeSet = Changeset.unpack(changeSetPack);
+          console.log(changeSet.inspect());
           // @ts-ignore
-          this.state.text,
-          serverText
-        );
-        const changeSetBetweenSeverAndLocal = Changeset.fromDiff(
-          diffBetweenLocalAndServer
-        );
+          const serverText = changeSet.apply(this.state.lastSyncedText);
 
-        // @ts-ignore
-        const caretPosition = this.textareaRef.current.selectionStart;
-
-        this.setState(
-          {
-            text: serverText,
-            lastSyncedText: serverText
-          },
-          () => {
-            const modifiedLength = this.calCaretPositionShift(
-              changeSetBetweenSeverAndLocal,
-              caretPosition
-            );
-
+          const workerDiffBetween = diffWorkerBetween();
+          // // @ts-ignore
+          const changeSetBetweenSeverAndLocal = await workerDiffBetween.diffBetween(
             // @ts-ignore
-            this.textareaRef.current.focus;
+            this.state.text,
             // @ts-ignore
-            this.textareaRef.current.setSelectionRange(
-              modifiedLength + caretPosition,
-              modifiedLength + caretPosition
-            );
-          }
-        );
-      });
+            serverText
+          );
+
+          console.log(
+            "type changeSetBetweenSeverAndLocal",
+            typeof changeSetBetweenSeverAndLocal
+          );
+
+          console.log(
+            "changeSetBetweenSeverAndLocal",
+            changeSetBetweenSeverAndLocal
+          );
+
+          // @ts-ignore
+          const caretPosition = this.textareaRef.current.selectionStart;
+
+          this.setState(
+            {
+              text: serverText,
+              lastSyncedText: serverText
+            },
+            () => {
+              const modifiedLength = this.calCaretPositionShift(
+                changeSetBetweenSeverAndLocal,
+                caretPosition
+              );
+
+              // @ts-ignore
+              this.textareaRef.current.focus;
+              // @ts-ignore
+              this.textareaRef.current.setSelectionRange(
+                modifiedLength + caretPosition,
+                modifiedLength + caretPosition
+              );
+            }
+          );
+        }
+      );
 
       socket_client.on(
         events.server.clientInitialization,
@@ -100,58 +98,43 @@ class Editor extends React.PureComponent {
   private calCaretPositionShift = (changeSet, caretPosition) => {
     let caretPositionShift = 0;
     let range = 0;
+    console.log("type changeSet", typeof changeSet);
     console.log("changeSet", changeSet);
-    changeSet.forEach(element => {
-      if (element.symbol === "=") {
-        range += element.length;
-      } else if (element.symbol === "+") {
-        caretPositionShift += element.length;
-      } else if (element.symbol === "-") {
-        caretPositionShift -= element.length;
+
+    for (let i = 0; i < changeSet.length; i++) {
+      if (changeSet[i].symbol === "=") {
+        range += changeSet[i].length;
+      } else if (changeSet[i].symbol === "+") {
+        caretPositionShift += changeSet[i].length;
+      } else if (changeSet[i].symbol === "-") {
+        caretPositionShift -= changeSet[i].length;
       }
 
       if (range >= caretPosition) {
         return caretPositionShift;
       }
-    });
-    // for (let i = 0; i < changeSet.length; i++) {
-    //   if (changeSet[i].symbol === "=") {
-    //     range += changeSet[i].length;
-    //   } else if (changeSet[i].symbol === "+") {
-    //     caretPositionShift += changeSet[i].length;
-    //   } else if (changeSet[i].symbol === "-") {
-    //     caretPositionShift -= changeSet[i].length;
-    //   }
-
-    //   if (range >= caretPosition) {
-    //     return caretPositionShift;
-    //   }
-    // }
+    }
 
     console.log("caretPositionShift", caretPositionShift);
 
     return caretPositionShift;
   };
 
-  calculateDiff = debounce(() => {
+  calculateDiff = debounce(async () => {
+    const workerDiffCalc = diffWorkerCalc();
     // @ts-ignore
+    const changeSetPack = await workerDiffCalc.diffCalc(
+      // @ts-ignore
+      this.state.lastSyncedText,
+      // @ts-ignore
+      this.state.text
+    );
 
-    // this.diffWorker.postMessage({
-    //   // @ts-ignore
-    //   prevText: this.state.lastSyncedText,
-    //   // @ts-ignore
-    //   currentText: this.state.text
-    // });
-
-    // @ts-ignore
-    const diff = this.dmp.diff_main(this.state.lastSyncedText, this.state.text);
-    // @ts-ignore
-    const changeSetPack = Changeset.fromDiff(diff).pack();
+    console.log("changeSetPack", changeSetPack);
 
     socket_client.emit(events.client.uploadChangeSet, {
       // @ts-ignore
       changeSetPack,
-      // changeSetPack: this.changeSetPack,
       // @ts-ignore
       from: this.userId,
       // @ts-ignore

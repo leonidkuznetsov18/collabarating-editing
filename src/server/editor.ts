@@ -69,7 +69,7 @@ export const editor = io => {
         }
 
         console.log(
-          "changeSetPack",
+          "changeSetPack ",
           from,
           Changeset.unpack(changeSetPack).inspect()
         );

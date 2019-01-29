@@ -68,9 +68,7 @@
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14",
-    "worker-loader": "^2.0.0"
-  },
-  "dependencies": {
-    "diff": "^4.0.1"
+    "workerize": "^0.1.7",
+    "workerize-loader": "^1.0.4"
   }
 }

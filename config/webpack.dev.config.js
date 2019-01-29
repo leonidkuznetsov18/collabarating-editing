@@ -35,12 +35,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.worker\.ts$/,
-        use: ['worker-loader']
-      },
-      {
         test: /\.(ts|tsx)$/,
         use: ['awesome-typescript-loader'],
+      },
+      {
+        test: /\.worker\.ts$/,
+        use: ['workerize-loader']
       },
       {
         test: /\.(js|jsx)$/,
@@ -116,12 +116,14 @@ module.exports = {
     }
   },
   resolve: {
-    // alias: {
-    //   'react-dom': '@hot-loader/react-dom'
-    // },
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
     mainFields: ['module', 'browser', 'main'],
-    modules: ['node_modules', path.join('src', 'client')]
+    modules: [
+      'node_modules',
+      path.join('src', 'client'),
+      path.join('src', 'server'),
+      path.join('src', 'workers')
+    ]
   },
   devServer: {
     contentBase: sourcePath,

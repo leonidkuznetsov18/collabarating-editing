@@ -5,9 +5,8 @@
     "forceConsistentCasingInFileNames": true,
     "lib": [
       "esnext",
-      "dom",
       "webworker",
-      "scripthost"
+      "dom"
     ],
     "module": "commonjs",
     "target": "es5",
