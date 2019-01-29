@@ -35,6 +35,9 @@ const handleStack = debounce(({ io, socket }) => {
 
   appliedChangeSet = null;
   console.log("serverText:", serverText);
+  if (serverText === "") {
+    serverText = ":)";
+  }
   const dmp = new DiffMatchPatch();
   const diff = dmp.diff_main(lastSyncText, serverText);
   const changeSetPack = Changeset.fromDiff(diff).pack();
