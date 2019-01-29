@@ -5,11 +5,12 @@
     "forceConsistentCasingInFileNames": true,
     "lib": [
       "esnext",
+      "dom",
       "webworker",
-      "dom"
+      "scripthost",
     ],
     "module": "commonjs",
-    "target": "es5",
+    "target": "esnext",
     "moduleResolution": "node",
     "outDir": "build",
     "rootDir": "/",
@@ -19,8 +20,12 @@
     "noImplicitThis": false,
     "noImplicitAny": false,
     "jsx": "react",
+    "noEmitOnError": false,
     "suppressImplicitAnyIndexErrors": false
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules",
     "build"

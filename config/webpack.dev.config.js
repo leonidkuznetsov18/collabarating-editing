@@ -3,8 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const postcssPresetEnv = require('postcss-preset-env');
-const { CheckerPlugin } = require('awesome-typescript-loader');
-
 const entryPath = path.resolve(__dirname, '../src/client/index.tsx');
 console.log('entryPath', entryPath);
 const sourcePath = path.resolve(__dirname, '../src/client');
@@ -36,24 +34,22 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        use: ['awesome-typescript-loader'],
-        exclude: path.resolve(__dirname, 'node_modules'),
+        use: ['ts-loader'],
+        exclude: /node_modules/
       },
       {
         test: /\.worker\.ts$/,
-        use: ['workerize-loader'],
-        exclude: path.resolve(__dirname, 'node_modules'),
-      },
-      {
-        test: /\.(js|jsx)$/,
-        include: /node_modules/,
-        use: ['react-hot-loader/webpack'],
+        use: ["workerize-loader"]
       },
       {
         enforce: "pre",
         test: /\.(js|jsx)$/,
-        use: ["source-map-loader"],
-        exclude: path.resolve(__dirname, 'node_modules'),
+        use: ["source-map-loader"]
+      },
+      {
+        test: /\.(js|jsx)$/,
+        include: /node_modules/,
+        use: ['react-hot-loader/webpack']
       },
       {
         test: /\.(scss|sass)$/,
@@ -94,7 +90,6 @@ module.exports = {
         TEST: JSON.stringify(process.env.TEST),
       },
     }),
-    new CheckerPlugin(),
     new HtmlWebpackPlugin({
       inject: true,
       template: htmlTemplatePath,

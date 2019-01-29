@@ -9,6 +9,8 @@ import socket_client from "../../../socket/socket_client";
 import "./Editor.scss";
 import events from "../../../socket/events";
 
+const { diffCalc, diffBetween } = (DiffWorker as any)() as typeof DiffWorker;
+
 interface Props { }
 
 interface State {
@@ -20,7 +22,6 @@ class Editor extends React.PureComponent<Props, State> {
   userId: string;
   constructor(props) {
     super(props);
-    // const me = this;
     this.state = {
       text: "",
       lastSyncedText: ""
@@ -40,9 +41,8 @@ class Editor extends React.PureComponent<Props, State> {
           // @ts-ignore
           const serverText = changeSet.apply(this.state.lastSyncedText);
 
-          const diffWorker = DiffWorker();
           // // @ts-ignore
-          const changeSetBetweenSeverAndLocal = await diffWorker.diffBetween(
+          const changeSetBetweenSeverAndLocal = await diffBetween(
             // @ts-ignore
             this.state.text,
             // @ts-ignore
@@ -125,10 +125,8 @@ class Editor extends React.PureComponent<Props, State> {
   };
 
   calculateDiff = debounce(async () => {
-    const workerDiffCalc = DiffWorker();
-    console.log("workerDiffCalc", workerDiffCalc);
     // @ts-ignore
-    const changeSetPack = await workerDiffCalc.diffCalc(
+    const changeSetPack = await diffCalc(
       // @ts-ignore
       this.state.lastSyncedText,
       // @ts-ignore
