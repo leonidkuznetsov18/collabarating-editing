@@ -2,6 +2,7 @@ COLLABARATING EDITING WITH DIFF PATCH MATCH
 
 ## Technologies
 
+- Typescript
 - React (v16)
 - Express.js (v4) as production and development server
 - Webpack 4 (production and development configurations)
@@ -10,31 +11,18 @@ COLLABARATING EDITING WITH DIFF PATCH MATCH
 - Socket.io
 - nodemon
 - diff_patch_match
+- web worker
 
 ## Features
 - TSLint
+- workerize-loader
 - Prettier code formatter
 - React Hot Loader
 - Server inspect
 - Linux/MacOS/Windows
 
-## Screenshots
-
-Demo UI view:
-
-![Demo view](https://raw.githubusercontent.com/antonfisher/react-express-webpack/docs/images/rew2-ui-screenshot.png)
-
-Development `.js` bundles:
-
-![Development js bundles](https://raw.githubusercontent.com/antonfisher/react-express-webpack/docs/images/rew-stat-dev.png)
-
-Production `.js` bundles:
-
-![Production js bundles](https://raw.githubusercontent.com/antonfisher/react-express-webpack/docs/images/rew-stat-prod.png)
-
-Production mode server output:
-
-![Production js bundles](https://raw.githubusercontent.com/antonfisher/react-express-webpack/docs/images/rew-log-prod.png)
+## Demo UI view:
+![Demo View](https://media.giphy.com/media/ygzfXDvPZJVkK3wEqo/giphy.gif)
 
 ## Usage
 

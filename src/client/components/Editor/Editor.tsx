@@ -9,7 +9,15 @@ import socket_client from "../../../socket/socket_client";
 import "./Editor.scss";
 import events from "../../../socket/events";
 
-class Editor extends React.PureComponent {
+interface Props { }
+
+interface State {
+  text: string;
+  lastSyncedText: string;
+}
+class Editor extends React.PureComponent<Props, State> {
+  textareaRef: React.RefObject<{}>;
+  userId: string;
   constructor(props) {
     super(props);
     // const me = this;
@@ -17,8 +25,8 @@ class Editor extends React.PureComponent {
       text: "",
       lastSyncedText: ""
     };
-    // @ts-ignore
     this.textareaRef = React.createRef();
+    this.userId = "";
   }
 
   componentDidMount() {
@@ -50,7 +58,6 @@ class Editor extends React.PureComponent {
             "changeSetBetweenSeverAndLocal",
             changeSetBetweenSeverAndLocal
           );
-
           // @ts-ignore
           const caretPosition = this.textareaRef.current.selectionStart;
 
@@ -64,7 +71,6 @@ class Editor extends React.PureComponent {
                 changeSetBetweenSeverAndLocal,
                 caretPosition
               );
-
               // @ts-ignore
               this.textareaRef.current.focus;
               // @ts-ignore
@@ -80,10 +86,9 @@ class Editor extends React.PureComponent {
       socket_client.on(
         events.server.clientInitialization,
         ({ userId, serverText }, callbackToServer) => {
-          // @ts-ignore
           this.userId = userId;
           this.setState({ text: serverText, lastSyncedText: serverText });
-          // @ts-ignore
+
           callbackToServer({ textMd5: md5(this.state.text) });
         }
       );

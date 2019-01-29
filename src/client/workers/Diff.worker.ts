@@ -8,6 +8,7 @@ export function add(a, b) {
 }
 
 export function diffCalc(a, b) {
+  console.log("a", typeof a, "b", typeof b);
   const diff = dmp.diff_main(a, b);
   // @ts-ignore
   const changeSetPack = Changeset.fromDiff(diff).pack();
