@@ -13,7 +13,7 @@
   "scripts": {
     "server": "ts-node src/server/index.ts",
     "server:watch": "nodemon -e ts -w ./src -x npm run server",
-    "server:watch-debug": "node --inspect -r ts-node/register ./src/server/index.ts",
+    "server:debug": "nodemon --inspect -r ts-node/register ./src/server/index.ts",
     "client": " webpack-dev-server --progress --config=config/webpack.dev.config.js",
     "clear": "rimraf build"
   },

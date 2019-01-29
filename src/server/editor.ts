@@ -2,6 +2,7 @@ import * as uuid from "uuid/v4";
 import { debounce } from "lodash";
 import * as DiffMatchPatch from "diff-match-patch";
 // @ts-ignore
+// import * as Changeset from "changesets";
 const Changeset = require("changesets").Changeset;
 import * as md5 from "blueimp-md5";
 import events from "../socket/events";
@@ -68,7 +69,7 @@ export const editor = io => {
         }
 
         console.log(
-          "changeSetPack ",
+          "changeSetPack",
           from,
           Changeset.unpack(changeSetPack).inspect()
         );
