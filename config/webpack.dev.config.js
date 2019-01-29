@@ -37,10 +37,12 @@ module.exports = {
       {
         test: /\.(ts|tsx)$/,
         use: ['awesome-typescript-loader'],
+        exclude: path.resolve(__dirname, 'node_modules'),
       },
       {
         test: /\.worker\.ts$/,
-        use: ['workerize-loader']
+        use: ['workerize-loader'],
+        exclude: path.resolve(__dirname, 'node_modules'),
       },
       {
         test: /\.(js|jsx)$/,
@@ -50,7 +52,8 @@ module.exports = {
       {
         enforce: "pre",
         test: /\.(js|jsx)$/,
-        loader: "source-map-loader"
+        use: ["source-map-loader"],
+        exclude: path.resolve(__dirname, 'node_modules'),
       },
       {
         test: /\.(scss|sass)$/,
@@ -120,9 +123,7 @@ module.exports = {
     mainFields: ['module', 'browser', 'main'],
     modules: [
       'node_modules',
-      path.join('src', 'client'),
-      path.join('src', 'server'),
-      path.join('src', 'workers')
+      path.join('src', 'client')
     ]
   },
   devServer: {

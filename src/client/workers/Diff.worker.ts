@@ -3,7 +3,18 @@ const Changeset = require("changesets").Changeset;
 
 const dmp = new DiffMatchPatch();
 
-export const diffBetween = (a, b) => {
+export function add(a, b) {
+  return a + b;
+}
+
+export function diffCalc(a, b) {
+  const diff = dmp.diff_main(a, b);
+  // @ts-ignore
+  const changeSetPack = Changeset.fromDiff(diff).pack();
+  return changeSetPack;
+}
+
+export function diffBetween(a, b) {
   // @ts-ignore
   const diffBetweenLocalAndServer = dmp.diff_main(
     // @ts-ignore
@@ -16,4 +27,4 @@ export const diffBetween = (a, b) => {
 
   console.log("in worker", diffBetweenLocalAndServer);
   return changeSetBetweenSeverAndLocal;
-};
+}

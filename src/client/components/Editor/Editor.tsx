@@ -1,9 +1,8 @@
 import * as React from "react";
 import { debounce } from "lodash";
 // @ts-ignore
-import diffWorkerCalc from "../../workers/diffCalc.worker";
+import * as DiffWorker from "../../workers/Diff.worker";
 // @ts-ignore
-import diffWorkerBetween from "../../workers/diffBetween.worker";
 const Changeset = require("changesets").Changeset;
 import * as md5 from "blueimp-md5";
 import socket_client from "../../../socket/socket_client";
@@ -33,9 +32,9 @@ class Editor extends React.PureComponent {
           // @ts-ignore
           const serverText = changeSet.apply(this.state.lastSyncedText);
 
-          const workerDiffBetween = diffWorkerBetween();
+          const diffWorker = DiffWorker();
           // // @ts-ignore
-          const changeSetBetweenSeverAndLocal = await workerDiffBetween.diffBetween(
+          const changeSetBetweenSeverAndLocal = await diffWorker.diffBetween(
             // @ts-ignore
             this.state.text,
             // @ts-ignore
@@ -121,7 +120,8 @@ class Editor extends React.PureComponent {
   };
 
   calculateDiff = debounce(async () => {
-    const workerDiffCalc = diffWorkerCalc();
+    const workerDiffCalc = DiffWorker();
+    console.log("workerDiffCalc", workerDiffCalc);
     // @ts-ignore
     const changeSetPack = await workerDiffCalc.diffCalc(
       // @ts-ignore
@@ -135,6 +135,7 @@ class Editor extends React.PureComponent {
     socket_client.emit(events.client.uploadChangeSet, {
       // @ts-ignore
       changeSetPack,
+
       // @ts-ignore
       from: this.userId,
       // @ts-ignore

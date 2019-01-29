@@ -15,7 +15,7 @@
     "server:watch": "nodemon -e ts -w ./src -x npm run server",
     "server:debug": "nodemon --inspect -r ts-node/register ./src/server/index.ts",
     "client": " webpack-dev-server --progress --config=config/webpack.dev.config.js",
-    "clear": "rimraf build"
+    "clear": "rimraf build node_modules && npm i"
   },
   "devDependencies": {
     "@hot-loader/react-dom": "^16.8.0-alpha.0",
@@ -68,7 +68,6 @@
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14",
-    "workerize": "^0.1.7",
     "workerize-loader": "^1.0.4"
   }
 }
